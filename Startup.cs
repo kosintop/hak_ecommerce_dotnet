@@ -13,6 +13,8 @@ using eCommerceDotNet.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using eCommerceDotNet.Models;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace eCommerceDotNet
 {
@@ -52,6 +54,19 @@ namespace eCommerceDotNet
                 options.Password.RequireUppercase = false;
                 options.SignIn.RequireConfirmedEmail = false;
                 options.SignIn.RequireConfirmedPhoneNumber = false;
+            });
+
+            services.AddAuthentication().AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = false,
+                    ValidateLifetime = false,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = "hak",
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("hak13579hak13579"))
+                };
             });
 
             services.ConfigureApplicationCookie(options =>
