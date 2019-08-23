@@ -1,0 +1,64 @@
+﻿@model IEnumerable<eCommerceDotNet.Models.CartItem>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>
+                Product Name
+            </td>
+            <td>
+                Variant
+            </td>
+            <td>
+                Price
+            </td>
+            <td>
+                Qt.
+            </td>
+            <td>
+                Amount
+            </td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductVariant.Product.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductVariant.Name)
+            </td>
+            <td>
+                @(item.ProductVariant.Product.Price + item.ProductVariant.AdditionalPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductCount)
+            </td>
+            <td>
+                @((item.ProductVariant.Product.Price + item.ProductVariant.AdditionalPrice) * item.ProductCount)
+            </td>
+            <td>
+                <a asp-action="Delete" asp-route-id="@item.CartItemId">Delete</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Total</td>
+            <td>@Model.Sum(item => (item.ProductVariant.Product.Price + item.ProductVariant.AdditionalPrice) * item.ProductCount)</td>
+            <td><a asp-action="Checkout">Checkout</a></td>
+        </tr>
+    </tfoot>
+</table>

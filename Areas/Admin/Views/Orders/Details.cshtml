@@ -1,0 +1,60 @@
+﻿@model eCommerceDotNet.Models.Order
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Details</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <td>
+                Product Name
+            </td>
+            <td>
+                Variant
+            </td>
+            <td>
+                Price
+            </td>
+            <td>
+                Qt.
+            </td>
+            <td>
+                Amount
+            </td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderItems)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductVariant.Product.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductVariant.Name)
+                </td>
+                <td>
+                    @(item.ProductVariant.Product.Price + item.ProductVariant.AdditionalPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductCount)
+                </td>
+                <td>
+                    @((item.ProductVariant.Product.Price + item.ProductVariant.AdditionalPrice) * item.ProductCount)
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Total</td>
+            <td>@Model.OrderItems.Sum(item => (item.ProductVariant.Product.Price + item.ProductVariant.AdditionalPrice) * item.ProductCount)</td>
+        </tr>
+    </tfoot>
+</table>
+

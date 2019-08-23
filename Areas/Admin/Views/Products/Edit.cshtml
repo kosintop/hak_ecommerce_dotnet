@@ -1,0 +1,136 @@
+﻿@model eCommerceDotNet.Models.Product
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>Product</h4>
+<hr />
+<div class="row">
+    <div class="col-xs-12 col-md-6">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ProductId" />
+            <div class="form-group">
+                <label asp-for="ProductName" class="control-label"></label>
+                <input asp-for="ProductName" class="form-control" />
+                <span asp-validation-for="ProductName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryId" class="control-label"></label>
+                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Details" class="control-label"></label>
+                <textarea asp-for="Details" class="form-control" style="height:300px;resize: none;"></textarea>
+                <span asp-validation-for="Details" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IFormMainImageFile" class="control-label"></label>
+                <input asp-for="IFormMainImageFile" class="form-control" />
+                <span asp-validation-for="IFormMainImageFile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IFormMoreImageFile" class="control-label"></label>
+                <input asp-for="IFormMoreImageFile" class="form-control" />
+                <span asp-validation-for="IFormMoreImageFile" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+        <hr />
+        <h4>Variants</h4>
+        @if (ViewData["Error"] != null)
+        {
+            <div class="text-danger">@ViewData["Error"]</div>
+        }
+        @foreach (ProductVariant variant in Model.ProductVariants)
+        {
+            <form class="form-group" asp-action="UpdateVariant" asp-route-id="@Model.ProductId">
+                <div class="row">
+                    <input type="hidden" asp-for="@variant.ProductId" />
+                    <input type="hidden" asp-for="@variant.ProductVariantId" />
+                    <div class="col-xs-3">
+                        <label asp-for="@variant.Name" class="control-label"></label>
+                        <input asp-for="@variant.Name" class="form-control" />
+                        <span asp-validation-for="@variant.Name" class="text-danger"></span>
+                    </div>
+                    <div class="col-xs-3">
+                        <label asp-for="@variant.AdditionalPrice" class="control-label"></label>
+                        <input asp-for="@variant.AdditionalPrice" class="form-control" />
+                        <span asp-validation-for="@variant.AdditionalPrice" class="text-danger"></span>
+                    </div>
+                    <div class="col-xs-3">
+                        <label class="control-label">&nbsp;</label>
+                        <input class="form-control" type="submit" value="Update" />
+                    </div>
+                    <div class="col-xs-3">
+                        <label class="control-label">&nbsp;</label>
+                        <a asp-action="DeleteVariant" asp-route-id="@Model.ProductId" asp-route-variantId="@variant.ProductVariantId" >
+                            <input class="form-control" type="button" value="Delete" />
+                        </a>
+                    </div>
+                </div>
+            </form>
+        }
+        <form class="form-group" asp-action="AddVariant" asp-route-id="@Model.ProductId">
+            <div class="row">
+                <input type="hidden" asp-for="@Model.ProductId" />
+                <div class="col-xs-3">
+                    <label class="control-label"></label>
+                    <input name="Name" class="form-control" />
+                </div>
+                <div class="col-xs-3">
+                    <label class="control-label"></label>
+                    <input name="AdditionalPrice" class="form-control" />
+                </div>
+                <div class="col-xs-6">
+                    <label class="control-label">&nbsp;</label>
+                    <input class="form-control" type="submit" value="Add" />
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <div class="col-xs-12 col-md-6">
+        <div class="row">
+            <div class="col-xs-12 col-lg-6">
+                @if (Model.MainImgUrl == null)
+                {
+                    <img src="~/images/dummy300x300.png" class="w-100" />
+                }
+                else
+                {
+                    <img src="~/@Model.MainImgUrl" class="w-100" />
+                }
+
+            </div>
+            <div class="col-xs-12 col-lg-6">
+                <div class="row">
+                    @foreach (ProductImage image in Model.ProductImages)
+                    {
+                        <a class="w-100" asp-action="DeleteImage" asp-route-id="@Model.ProductId" asp-route-imageId="@image.ProductImageId">
+                            <img class="col-xs-6 col-lg-3" src="~/@image.ImgUrl">
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

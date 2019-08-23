@@ -1,0 +1,65 @@
+﻿@model Product
+
+@{
+    ViewData["Title"] = "Index";
+}
+    <div class="container">
+        <!--breadcrumb-->
+        <br />
+        <div class="row">
+            <div class="col-xs-12" style="font-size:24px;">
+                <a asp-controller="Home" asp-action="Index">Home</a><span> > </span>
+                <a asp-controller="Home" asp-action="Index" asp-route-id="@Model.CategoryId">@Model.Category.CategoryName</a><span> > </span>
+                <span>@Model.ProductName</span>
+            </div>
+        </div>
+        <hr />
+        <div class="row">
+            <!--gallery-->
+            <div class="col-xs-12 col-lg-6">
+                <div class="row">
+                    @if (Model.MainImgUrl == null)
+                    {
+                        <img class="col-xs-12" src="~/images/dummy300x300.png" />
+                    }
+                    else
+                    {
+                        <img class="col-xs-12" src="~/@Model.MainImgUrl" />
+                    }
+
+                </div>
+                <div class="row">
+                    @foreach (ProductImage image in Model.ProductImages)
+                    {
+                       <img class="col-xs-3" src="~/@image.ImgUrl" height="150" style="object-fit:cover"></img>
+                    }
+                </div>
+            </div>
+            <!--detail-->
+            <div class="col-xs-12 col-lg-6">
+                <h1>@Model.ProductName</h1>
+                <div>@Model.Details</div>
+                <hr />
+                <h2>Price: @Model.Price Baht</h2>
+                <div>
+                    <form asp-controller="Carts" asp-action="AddToCart">
+                        <div class="form-group">
+                            <label class="control-label">Variant</label>
+                            @*<select class="form-control" name="ProductVariantId" asp-items="@ViewBag.VariantList">*@
+                            <select class="form-control" name="ProductVariantId">
+                                @foreach (ProductVariant variant in @ViewBag.VariantList)
+                                {
+                                    <option value="@variant.ProductVariantId">@variant.Name (+@variant.AdditionalPrice)</option>
+                                }
+                            </select>
+                            <label class="control-label">Quantity</label>
+                            <input class="form-control" name="ProductCount" type="number" />
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" type="submit" value="Add to Cart" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
